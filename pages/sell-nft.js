@@ -1,3 +1,5 @@
+import Head from "next/head"
+import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import { Form, useNotification, Button } from "web3uikit"
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -7,7 +9,7 @@ import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import networkMapping from "../constants/networkMapping.json"
 import { useEffect, useState } from "react"
 
-const sellNft = () => {
+export default function Home() {
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     const marketplaceAddress = networkMapping[chainString].NftMarketplace[0]
@@ -16,7 +18,7 @@ const sellNft = () => {
 
     const { runContractFunction } = useWeb3Contract()
 
-    const approveAndList = async (data) => {
+    async function approveAndList(data) {
         console.log("Approving...")
         const nftAddress = data.data[0].inputResult
         const tokenId = data.data[1].inputResult
@@ -41,7 +43,7 @@ const sellNft = () => {
         })
     }
 
-    const handleApproveSuccess = async (nftAddress, tokenId, price) => {
+    async function handleApproveSuccess(nftAddress, tokenId, price) {
         console.log("Ok! Now time to list")
         const listOptions = {
             abi: nftMarketplaceAbi,
@@ -56,13 +58,12 @@ const sellNft = () => {
 
         await runContractFunction({
             params: listOptions,
-            onSuccess: handleListSuccess,
+            onSuccess: () => handleListSuccess(),
             onError: (error) => console.log(error),
         })
     }
 
-    const handleListSuccess = async (transaction) => {
-        await transaction.wait(1)
+    async function handleListSuccess() {
         dispatch({
             type: "success",
             message: "NFT listing",
@@ -71,8 +72,7 @@ const sellNft = () => {
         })
     }
 
-    const handleWithdrawSuccess = async (transaction) => {
-        await transaction.wait(1)
+    const handleWithdrawSuccess = () => {
         dispatch({
             type: "success",
             message: "Withdrawing proceeds",
@@ -80,7 +80,7 @@ const sellNft = () => {
         })
     }
 
-    const setupUI = async () => {
+    async function setupUI() {
         const returnedProceeds = await runContractFunction({
             params: {
                 abi: nftMarketplaceAbi,
@@ -141,7 +141,7 @@ const sellNft = () => {
                                 params: {},
                             },
                             onError: (error) => console.log(error),
-                            onSuccess: handleWithdrawSuccess,
+                            onSuccess: () => handleWithdrawSuccess,
                         })
                     }}
                     text="Withdraw"
@@ -153,5 +153,3 @@ const sellNft = () => {
         </div>
     )
 }
-
-export default sellNft

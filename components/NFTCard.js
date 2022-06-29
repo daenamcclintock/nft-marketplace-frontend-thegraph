@@ -22,7 +22,7 @@ const truncateStr = (fullStr, strLen) => {
     )
 }
 
-const NFTCard = (props) => {
+export default function NFTCard ({ price, nftAddress, tokenId, marketplaceAddress, seller }) {
     const { isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState("")
     const [tokenName, setTokenName] = useState("")
@@ -30,8 +30,6 @@ const NFTCard = (props) => {
     const [showModal, setShowModal] = useState(false)
     const hideModal = () => setShowModal(false)
     const dispatch = useNotification()
-
-    const { price, nftAddress, tokenId, marketplaceAddress, seller } = props
 
     const { runContractFunction: getTokenURI } = useWeb3Contract({
         abi: nftAbi,
@@ -89,12 +87,11 @@ const NFTCard = (props) => {
             ? setShowModal(true)
             : buyItem({
                   onError: (error) => console.log(error),
-                  onSuccess: handleBuyItemSuccess,
+                  onSuccess: () => handleBuyItemSuccess(),
               })
     }
 
-    const handleBuyItemSuccess = async (tx) => {
-        await tx.wait(1)
+    const handleBuyItemSuccess = () => {
         dispatch({
             type: "success",
             message: "Item bought!",
@@ -146,5 +143,3 @@ const NFTCard = (props) => {
         </div>
     )
 }
-
-export default NFTCard

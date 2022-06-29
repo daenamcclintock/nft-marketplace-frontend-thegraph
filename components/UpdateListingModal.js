@@ -4,15 +4,18 @@ import { useWeb3Contract } from "react-moralis"
 import nftMarketplaceAbi from "../constants/NftMarketplace.json"
 import { ethers } from "ethers"
 
-const UpdateListingModal = (props) => {
+export default function UpdateListingModal({
+    nftAddress,
+    tokenId,
+    isVisible,
+    marketplaceAddress,
+    onClose,
+}) {
     const dispatch = useNotification()
-
-    const { nftAddress, tokenId, isVisible, marketplaceAddress, onClose } = props
 
     const [priceToUpdateListingWith, setPriceToUpdateListingWith] = useState(0)
 
-    const handleUpdateListingSuccess = async (tx) => {
-        await tx.wait(1)
+    const handleUpdateListingSuccess = () => {
         dispatch({
             type: "success",
             message: "listing updated",
@@ -44,7 +47,7 @@ const UpdateListingModal = (props) => {
                     onError: (error) => {
                         console.log(error)
                     },
-                    onSuccess: handleUpdateListingSuccess,
+                    onSuccess: () => handleUpdateListingSuccess(),
                 })
             }}
         >
@@ -59,5 +62,3 @@ const UpdateListingModal = (props) => {
         </Modal>
     )
 }
-
-export default UpdateListingModal
