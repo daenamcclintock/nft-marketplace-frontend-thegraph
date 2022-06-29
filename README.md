@@ -13,6 +13,16 @@ Moralis: How do we tell it to listen to ur events?
 1. Connect it to our blockchain
 2. Which contract, which events, and what to do when it hears those events
 
+# TheGraph
+1. Decentralized layer for storing the NFT data
+2. Network of nodes that read data off the blockchain and store data
+3. Indexing protocol for querying blockchain networks like Ethereum and IPFS
+
+# Integrating TheGraph
+1. Index the NFTs with TheGraph
+2. REad the NFts from TheGraph
+
+
 
 
 
